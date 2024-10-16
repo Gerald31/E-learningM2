@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  app:
+    image: devcloudarmel/front
+    container_name: frontend-vuejs
+    build:
+      context: ./frontend-vuejs
+      dockerfile: Dockerfile
+    env_file:
+      - ./frontend-vuejs/.env
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+    networks:
+      - e-learnings
+  
+  backend:
+    image: devcloudarmel/back
+    container_name: backend-laravel
+    build:
+      context: ./backend-laravel
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend-laravel/.env
+    ports:
+      - 8000:8000
+    networks:
+      - e-learnings
+
+networks:
+  e-learnings:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

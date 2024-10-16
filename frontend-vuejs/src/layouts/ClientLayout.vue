@@ -1,0 +1,36 @@
+<script setup>
+import { sidebarState } from "@/utility/theme";
+import Sidebar from "@/components/sidebar/Sidebar.vue";
+import Navbar from "@/components/Navbar.vue";
+import FadeTransition from '@/components/transitions/FadeTransition.vue';
+</script>
+
+<template>
+  <div
+    class="min-h-screen text-gray-900 bg-gray-100 dark:bg-dark-bg dark:text-gray-100"
+  >
+    <Sidebar />
+
+    <div
+      style="transition-property: margin; transition-duration: 150ms"
+      :class="[
+        'h-screen flex flex-col',
+        {
+          'lg:ml-64': sidebarState.isOpen,
+          'md:ml-16': !sidebarState.isOpen,
+        },
+      ]"
+    >
+      <Navbar />
+
+        <router-view v-slot="{ Component, route }">
+            <FadeTransition>
+                <div :key="route.name">
+                    <component :is="Component" />
+                </div>
+            </FadeTransition>
+        </router-view>
+
+    </div>
+  </div>
+</template>
