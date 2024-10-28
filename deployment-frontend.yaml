@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        app: front Y4OKHnOWwo2zeeB2/qt4WL9s8dsRPlvrhX4BB3x4
+        app: front
     spec:
       containers:
       - name: front
