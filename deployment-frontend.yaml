@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: front
+      app: e-learning-frontend
   template:
     metadata:
       labels:
-        app: front
+        app: e-learning-frontend
     spec:
       containers:
-      - name: front
-        image: devcloudarmel/front:latest
+      - name: e-learning-frontend
+        image: geraldrandriamanantena/e-learning-frontend:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 80
@@ -26,7 +26,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: front
+    app: e-learning-frontend
   ports:
     - protocol: TCP
       port: 3000

@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: back
+      app: e-learning-backend
   template:
     metadata:
       labels:
-        app: back
+        app: e-learning-backend
     spec:
       containers:
-      - name: back
-        image: devcloudarmel/back:latest
+      - name: e-learning-backend
+        image: geraldrandriamanantena/e-learning-backend:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 8000
@@ -26,7 +26,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: back
+    app: e-learning-backend
   ports:
     - protocol: TCP
       port: 8000
