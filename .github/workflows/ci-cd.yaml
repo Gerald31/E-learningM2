@@ -27,8 +27,8 @@ jobs:
         BACKEND_IMAGE_NAME: geraldrandriamanantena/e-learning-backend
         IMAGE_TAG: latest
       run: |
-        sudo docker build -t $BACKEND_IMAGE_NAME:$IMAGE_TAG ./backend-laravel
-        sudo docker push $BACKEND_IMAGE_NAME:$IMAGE_TAG
+        docker build -t $BACKEND_IMAGE_NAME:$IMAGE_TAG ./backend-laravel
+        docker push $BACKEND_IMAGE_NAME:$IMAGE_TAG
 
     # Étape 4 : Build et push de l'image Docker pour le frontend
     - name: Build, tag, and push frontend Docker image to Docker Hub
@@ -36,8 +36,8 @@ jobs:
         FRONTEND_IMAGE_NAME: geraldrandriamanantena/e-learning-frontend
         IMAGE_TAG: latest
       run: |
-        sudo docker build -t $FRONTEND_IMAGE_NAME:$IMAGE_TAG ./frontend-vuejs
-        sudo docker push $FRONTEND_IMAGE_NAME:$IMAGE_TAG
+        docker build -t $FRONTEND_IMAGE_NAME:$IMAGE_TAG ./frontend-vuejs
+        docker push $FRONTEND_IMAGE_NAME:$IMAGE_TAG
 
     # Étape 5 : Configuration AWS pour EKS (assurez-vous que les secrets AWS_ACCESS_KEY_ID et AWS_SECRET_ACCESS_KEY sont configurés)
     - name: Configure AWS credentials
