@@ -25,7 +25,7 @@ services:
     env_file:
       - ./backend-laravel/.env
     ports:
-      - 8000:80
+      - 8000:9000
     volumes:
       - ./backend-laravel:/var/www
     networks:

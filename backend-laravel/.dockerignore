@@ -1,0 +1,34 @@
+# Ignorer le répertoire vendor (installé via Composer)
+vendor/
+
+# Ignorer le répertoire node_modules (installé via npm ou yarn)
+node_modules/
+
+# Ignorer les fichiers de logs
+storage/logs/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/data/*
+
+# Ignorer les fichiers de débogage ou cache
+*.log
+*.cache
+
+# Ignorer les fichiers spécifiques à l'IDE
+.idea/
+.vscode/
+
+# Ignorer les fichiers système
+.DS_Store
+Thumbs.db
+
+# Ignorer les fichiers de build front-end (facultatif si générés localement)
+public/hot
+public/storage
+public/mix-manifest.json
+public/css/
+public/js/
+
+# Ignorer les tests et fichiers spécifiques au développement
+tests/
+phpunit.xml
