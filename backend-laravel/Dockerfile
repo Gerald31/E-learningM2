@@ -1,35 +1,37 @@
-# Utiliser l'image PHP officielle avec FPM
+# Use the official PHP image as a parent image
 FROM php:8.2-fpm
 
-# Installer les extensions nécessaires pour Laravel et autres dépendances
+# Set working directory
+WORKDIR /var/www
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
+    libzip-dev \
     unzip \
     git \
-    curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql mbstring gd xml
+    && docker-php-ext-install gd zip
 
-# Installer Composer (gestionnaire de dépendances PHP)
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copier les fichiers de l'application dans le conteneur
-WORKDIR /var/www/html
-COPY . /var/www/html
+# Copy existing application directory contents
+COPY . .
 
-# Installer les dépendances PHP via Composer
+# Install PHP dependencies using Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Donner les permissions appropriées au répertoire de stockage et cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Copy the configuration file
+COPY ./docker/nginx.conf /etc/nginx/sites-available/default
 
-# Exposer le port par défaut utilisé par PHP-FPM
+# Set permissions for the storage and bootstrap/cache directories
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Expose the port that the application runs on
 EXPOSE 9000
 
-# Lancer le processus PHP-FPM
+# Start the PHP FastCGI Process Manager
 CMD ["php-fpm"]
