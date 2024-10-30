@@ -61,3 +61,8 @@ jobs:
       run: |
         kubectl apply -f deployment-backend.yaml
         kubectl apply -f deployment-frontend.yaml
+
+    - name: Force restart pods
+      run: |
+        kubectl rollout restart deployment/back-deployment
+        kubectl rollout restart deployment/front-deployment
