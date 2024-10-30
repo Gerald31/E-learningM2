@@ -1,40 +1,62 @@
-# Use the official PHP image as a parent image
 FROM php:8.2-fpm
 
 # Set working directory
 WORKDIR /var/www
 
-# Install system dependencies and Nginx
+# Add docker php ext repo
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+# Install php extensions
+RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions mbstring pdo_mysql zip exif pcntl gd memcached
+
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    nginx \
+    build-essential \
     libpng-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libfreetype6-dev \
-    libzip-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
     unzip \
     git \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl \
+    lua-zlib-dev \
+    libmemcached-dev \
+    nginx
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install supervisor
+RUN apt-get install -y supervisor
 
-# Copy existing application directory contents
-COPY . .
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP dependencies using Composer
-RUN composer install --no-dev --optimize-autoloader
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy the Nginx configuration file
-COPY ./docker/nginx.conf /etc/nginx/sites-available/default
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Set permissions for the storage and bootstrap/cache directories
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Copy code to /var/www
+COPY --chown=www:www-data . /var/www
 
-# Expose the ports that the application runs on
-EXPOSE 80 9000
+# add root to www group
+RUN chmod -R ug+w /var/www/storage
 
-# Start Nginx and PHP-FPM
-CMD service nginx start && php-fpm
+# Copy nginx/php/supervisor configs
+RUN cp docker/supervisor.conf /etc/supervisord.conf
+RUN cp docker/php.ini /usr/local/etc/php/conf.d/app.ini
+RUN cp docker/nginx.conf /etc/nginx/sites-enabled/default
+
+# PHP Error Log Files
+RUN mkdir /var/log/php
+RUN touch /var/log/php/errors.log && chmod 777 /var/log/php/errors.log
+
+# Deployment steps
+RUN composer install --optimize-autoloader --no-dev
+RUN chmod +x /var/www/docker/run.sh
+
+EXPOSE 80
+ENTRYPOINT ["/var/www/docker/run.sh"]
