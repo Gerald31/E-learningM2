@@ -48,14 +48,6 @@ jobs:
         port: 22
         script: |
           docker pull geraldrandriamanantena/e-learning-backend:latest
-          docker run -d --name backend_new -p 81:80 geraldrandriamanantena/e-learning-backend:latest
-          sleep 10
-          if [ "$(docker inspect -f '{{.State.Running}}' backend_new)" = "true" ]; then
-            docker stop backend || true
-            docker rm backend || true
-            
-            docker rename backend_new backend
-          else
-            echo "Deployment failed. New container did not start properly."
-            exit 1
-          fi
+          docker stop backend || true
+          docker rm backend || true
+          docker run -d --name backend -p 80:80 geraldrandriamanantena/e-learning-backend:latest
