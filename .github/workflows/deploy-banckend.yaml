@@ -42,13 +42,13 @@ jobs:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: "13.244.159.92"  # Public IP of the EC2 instance
+        host: "13.247.195.204"  # Public IP of the EC2 instance
         username: "ubuntu"  # Update if using a different username
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
         script: |
           docker pull geraldrandriamanantena/e-learning-backend:latest
-          docker run -d --name backend_new -p 80:80 geraldrandriamanantena/e-learning-backend:latest
+          docker run -d --name backend_new -p 8000:80 geraldrandriamanantena/e-learning-backend:latest
           sleep 10
           if [ "$(docker inspect -f '{{.State.Running}}' backend_new)" = "true" ]; then
             docker stop backend || true
