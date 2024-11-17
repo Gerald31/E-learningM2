@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: front-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: e-learning-frontend
+      app: frontend-master
   template:
     metadata:
       labels:
-        app: e-learning-frontend
+        app: frontend-master
     spec:
       containers:
-      - name: e-learning-frontend
-        image: geraldrandriamanantena/e-learning-frontend:latest
+      - name: frontend-master
+        image: devcloudarmel/frontend-master:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 80
@@ -26,7 +26,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: e-learning-frontend
+    app: frontend-master
   ports:
     - protocol: TCP
       port: 80

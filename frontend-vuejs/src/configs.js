@@ -1,5 +1,5 @@
 export const configs = {
-    BASE_URL: "http://ec2-13-245-183-13.af-south-1.compute.amazonaws.com/",
+    BASE_URL: "http://localhost:8000/",
     PREFIX: "api/",
     RELEASE: "local",
 };
